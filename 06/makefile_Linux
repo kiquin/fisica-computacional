@@ -1,0 +1,23 @@
+all : IC.txt
+
+IC.txt: cond
+
+cond:IC.c
+		cc IC.c -lm -std=gnu99 -o cond
+		cc evolve.c -lm -std=gnu99 -o evol
+		
+		./cond 0.0 0.0 0.0 0.0
+		mv IC.txt 1_galaxia.txt
+		
+		./cond 150 200 0 -100
+		mv IC.txt 2_galaxia.txt
+		
+		./evol 1_galaxia.txt
+		python plots.py &
+		
+		cat 1_galaxia.txt >> 2_galaxia.txt
+		./evol 2_galaxia.txt
+		python plots.py &
+		
+clean:
+		rm -f IC.txt 1_galaxia.txt 2_galaxia.txt onegalaxy *.dat cond evol
